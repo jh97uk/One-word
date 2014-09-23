@@ -6,6 +6,6 @@
 				<li ng-repeat="message in messages" message-id="{{message.id}}">{{message.user}}: {{message.content}}</li>
 			</ul>
 		</div>
-		<input ng-model="messageContent" ng-send>
-			<button ng-click="controller.sendMessage(messageContent)">Send</button>
+		<div id="send"><input ng-model="messageContent" ng-send>
+			<button ng-click="sendMessage(messageContent)">Send</button></div>
 </div>
