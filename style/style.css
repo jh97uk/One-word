@@ -84,8 +84,13 @@ form button{
 #chat li{
 	width: 100%;
 	height: 40px;
-	list-style: none;
 	padding: 0px;
 	margin: 0px;
+	list-style: none;
+	font-family: arial;
 }
 
+#send{
+	width: 93%;
+	margin: 0px auto;
+}
