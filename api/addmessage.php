@@ -9,7 +9,7 @@ if(!session_status()){
 
 $session = $_POST['session'];
 $uid = $_SESSION['uid'];
-$message = $_POST['message'];
+$message = htmlentities($_POST['message']);
 
 
 $submitMessage = new NewMessage($uid, $message, "", $session);
