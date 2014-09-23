@@ -12,13 +12,11 @@ I have been writing this project on and off for 2 weeks so far. Due to some comp
 
 4. Float the hosts messages to the left and the players messages to the right for clarity
 
-5. Sanitize forms
+5. Implement a messages per interval limit
 
-6. Implement a messages per interval limit
+6. Make the chat window scroll as the chat expands
 
-7. Make the chat window scroll as the chat expands
+7. Add a time out for empty sessions.
 
-8. Add a time out for empty sessions.
-
-9. Stop all session page timers on page leave
+8. Stop all session page timers on page leave
 
