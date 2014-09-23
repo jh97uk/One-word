@@ -1,0 +1,11 @@
+<div ng-controller="sessionCtrl as controller">
+		<div id="head"><h1>Session started!</h1></div>
+		<p class="description">{{startedMessage}}</p>
+		<div id="chat">
+			<ul>
+				<li ng-repeat="message in messages" message-id="{{message.id}}">{{message.user}}: {{message.content}}</li>
+			</ul>
+		</div>
+		<input ng-model="messageContent" ng-send>
+			<button ng-click="controller.sendMessage(messageContent)">Send</button>
+</div>
