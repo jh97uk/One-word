@@ -1,27 +1,42 @@
 body {
 	margin:0px;
 	padding:0px;
+	background-image: url(http://i.imgur.com/fXyQLOW.png);
+	background-size: cover;
 }
 
 #container {
 	width:400px;
-	height:500px;
+	height: 478px;
 	margin:0px auto;
 	margin-top:22px;
-	border:1px solid rgb(207, 207, 207);
+	/* border:1px solid rgb(207, 207, 207); */
 	border-radius: 10px;
 	
-	padding-left: 20px;
-	padding-right: 20px;
+	/* padding-left: 20px; */
+	/* padding-right: 20px; */
 
 	background-color: rgb(250, 250, 250);
 }
 
-#head h1 {
-	color: rgb(97, 97, 97);
+#innercontainer{
+	padding-left:14px;
+	padding-left:14px;
+}
+
+#header{
+	background-color: rgb(231, 83, 83);
 	width:100%;
-	font-family: Verdana, Arial;
+	height:50px;
+}
+
+#head h1 {
+	width:100%;
+	height:100%;
+	line-height: 50px;
 	text-align: center;
+	color: rgb(240, 240, 240);
+	font-family: Verdana, Arial;
 }
 
 .description {
@@ -30,16 +45,16 @@ body {
 }
 
 .redButton{
+	display: block;
 	width: 270px;
 	height: 41px;
-	display: block;
 	margin: 0px auto;
-	text-align: center;
-	background-color: rgb(231, 83, 83);
-	border: 2px solid rgb(170, 170, 170);
-	border-radius: 9px;
-	color: white;
 	font-size: 19px;
+	text-align: center;
+	color: white;
+	background-color: rgb(108, 202, 115);
+	border: 1px solid rgb(170, 170, 170);
+	border-radius: 2px;
 	font-family: arial;
 	text-decoration: none;
 	line-height: 40px;
