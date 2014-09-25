@@ -4,19 +4,17 @@ I have been writing this project on and off for 2 weeks so far. Due to some comp
 
 **TO DO**
 
-1. Explode messages so that theres only one word per message
+1. Make sure the host cannot join as a player to a session
 
-2. Make sure the host cannot join as a player to a session
+2. Update the design (the design is NOT final)
 
-3. Update the design (the design is NOT final)
+3. Float the hosts messages to the left and the players messages to the right for clarity
 
-4. Float the hosts messages to the left and the players messages to the right for clarity
+4. Implement a messages per interval limit
 
-5. Implement a messages per interval limit
+5. Make the chat window scroll as the chat expands
 
-6. Make the chat window scroll as the chat expands
+6. Add a time out for empty sessions.
 
-7. Add a time out for empty sessions.
-
-8. Stop all session page timers on page leave
+7. Stop all session page timers on page leave
 
