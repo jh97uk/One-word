@@ -1,4 +1,4 @@
-var app = angular.module("oneword", ['dotjem.routing']);
+var app = angular.module("oneword", ['dotjem.routing', "luegg.directives"]);
 var availPages = [
 {
 	path: "/home",
@@ -22,6 +22,7 @@ app.directive("ngSend", function(){
 	return function(scope, element, attr){
 			element.bind("keyup", function(event){
 				if(event.which === 13){
+					if(!scope.canSend) return;
 					scope.sendMessage(scope.messageContent);
 					element.val('');
 				}
@@ -125,7 +126,7 @@ app.controller("startSess", function($scope, $http, $window, $state){
 	var self = this;
 	var thisScope = $scope;
 	self.state = $state;
-	
+
 	$scope.startNewSession = function(){
 		self.newSessionData = {"password": thisScope.password};
 	
@@ -142,12 +143,13 @@ app.controller("startSess", function($scope, $http, $window, $state){
 	};
 });
 
-app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $interval, apiFactory){
+app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $interval, $location, apiFactory){
 		sessionCtrl = this;	
 		var session = $routeParams.session;
 		
 		$scope.messages = [];
 		$scope.uid;
+		$scope.canSend = false;
 
 		sessionCtrl.isEmpty = function(json){
 			for(item in json){
@@ -189,6 +191,7 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 				if(reply.status == 1){
 					$interval.cancel(sessionCtrl.playerCheck);
 					$scope.startedMessage = "Played has joined!";
+					$scope.canSend = true;
 				} else {
 					$scope.startedMessage = "Waiting for player...";
 				}
@@ -199,7 +202,7 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 			var messageCount = $scope.messages.length - 1;
 			return messageCount;
 		};
-		
+
 		sessionCtrl.getLatestMessages = function(){
 			if(sessionCtrl.isEmpty($scope.messages)){
 				
@@ -209,8 +212,10 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 							
 							if(reply[i].senderuid == $scope.uid){
 								reply[i].user = "You";
+								$scope.canSend = false;
 							} else{
 								reply[i].user = "Other";
+								$scope.canSend = true;
 							}
 
 							$scope.messages.push(reply[i]);
@@ -229,8 +234,10 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 							
 							if(reply[0].senderuid == $scope.uid){
 								reply[0].user = "You";
+								$scope.canSend = false;
 							} else{
 								reply[0].user = "Other";
+								$scope.canSend = true;
 							}
 
 							$scope.messages.push(reply[0]);
@@ -247,7 +254,6 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 			}
 
 			apiFactory.sendMessage(session, message).success(function(reply){
-				console.log("message sent");
 			});
 		};
 
