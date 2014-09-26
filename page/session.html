@@ -1,10 +1,10 @@
 <div ng-controller="sessionCtrl as controller">
 		<p class="description">{{startedMessage}}</p>
-		<div id="chat">
+		<div id="chat" scroll-glue>
 			<ul>
 				<li ng-repeat="message in messages" message-id="{{message.id}}">{{message.user}}: {{message.content}}</li>
 			</ul>
 		</div>
 		<div id="send"><input ng-model="messageContent" ng-send>
-			<button ng-click="sendMessage(messageContent)">Send</button></div>
+			<button ng-click="sendMessage(messageContent)" ng-disabled="!canSend">Send</button></div>
 </div>
