@@ -1,6 +1,9 @@
 <?php
 	require_once("class/class_database.php");
-
+	if(!isset($_POST['data'])) {
+		echo json_encode(["error"=>"invalid_data"]);
+		return;
+	}
 	$data = $_POST['data'];
 
 	$session_id = md5(uniqid());

@@ -1,7 +1,8 @@
 <?php
 	require_once("class/class_message.php");
 
-	if(null == $_POST['session']){
+	if(!isset($_POST['session'])){
+		echo json_encode(["error"=>"invalid_session"]);
 		return;
 	}
 

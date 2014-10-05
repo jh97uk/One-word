@@ -1,16 +1,20 @@
 <?php
 include('class/class_database.php');
-if(!isset($_SESSION)){
-	session_start();
-	if(!isset($_SESSION['uid'])){
-		return;
-	}
+session_start();
+
+if(!isset($_SESSION['uid'])){
+	echo json_encode(["error"=>"user_required"]);
+	return;
+} elseif (!isset($_POST['session'])) {
+	echo json_encode(["error"=>"invalid_session"]);
+	return;
 }
 
 $session = $_POST['session'];
 
 $fetchAllDB = new Database();
 $result = $fetchAllDB->preparedQuery("SELECT * FROM sessions WHERE sessionid=?", array($session))->fetchAll(PDO::FETCH_ASSOC);
+
 if($result){
 	foreach ($result as $key) {
 		if($key['playeruid'] != ""){
