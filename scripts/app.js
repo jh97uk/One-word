@@ -33,6 +33,14 @@ app.directive("ngSend", function(){
 app.factory('apiFactory', ['$http', function($http){
 	var apiFactory = {};
 	
+	apiFactory.startNewSession = function(){
+		return $http({
+			method: "POST",
+			url: "api/newsession.php",
+			headers: {"Content-Type": "application/x-www-form-urlencoded"}
+		});
+	}
+
 	apiFactory.initUser = function(){
 		return	$http({
 			method: "POST",
@@ -122,20 +130,15 @@ app.controller("mainController", function($scope, $http, $routeParams){
 
 });
 
-app.controller("startSess", function($scope, $http, $window, $state){
+app.controller("startSess", function($scope, $http, $state, apiFactory){
 	var self = this;
 	var thisScope = $scope;
 	self.state = $state;
 
 	$scope.startNewSession = function(){
-		self.newSessionData = {"password": thisScope.password};
-	
-		$http({
-			method: "POST",
-			url: "api/newsession.php",
-			data: $.param({"data": self.newSessionData}),
-			headers: {"Content-Type": "application/x-www-form-urlencoded"}
-		}).success(function(reply){
+		console.log("test");
+		apiFactory.startNewSession().success(function(reply){
+			console.log(reply);
 			if(reply.status == "complete"){
 				$state.goto('session', {session:reply.sessionid});
 			}
@@ -259,4 +262,15 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 
 		sessionCtrl.start(); 
 
+		$scope.$on('$destroy', function(){
+			if(sessionCtrl.messageCheck){
+				$interval.cancel(sessionCtrl.messageCheck);
+			} else if(sessionCtrl.messageCheck2){
+				$interval.cancel(sessionCtrl.messageCheck2);
+			} else if(sessionCtrl.playerCheck){
+				$interval.cancel(sessionCtrl.playerCheck);
+			}
+			
+			$scope.canSend = false;
+		});
 });
