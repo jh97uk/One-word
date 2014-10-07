@@ -22,7 +22,7 @@ app.directive("ngSend", function(){
 	return function(scope, element, attr){
 			element.bind("keyup", function(event){
 				if(event.which === 13){
-					if(!scope.canSend) return;
+					if(!scope.player.canSend) return;
 					scope.sendMessage(scope.messageContent);
 					element.val('');
 				}
@@ -49,10 +49,10 @@ app.factory('apiFactory', ['$http', function($http){
 		});
 	};
 	
-	apiFactory.hostOrClient = function(session){
+	apiFactory.joinSession = function(session){
 		return $http({
 			method: "POST",
-			url: "api/sessionhostclient.php",
+			url: "api/join_session.php",
 			data: $.param({"session":session}),
 			headers:{"Content-Type": "application/x-www-form-urlencoded"}
 		});
@@ -147,130 +147,108 @@ app.controller("startSess", function($scope, $http, $state, apiFactory){
 });
 
 app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $interval, $location, apiFactory){
-		sessionCtrl = this;	
-		var session = $routeParams.session;
-		
-		$scope.messages = [];
-		$scope.uid;
-		$scope.canSend = false;
+	var ctrl = this;
+	var session = $routeParams.session;
+	
+	$scope.messages = [];
+	
+	$scope.player = {};
+	$scope.player.rank = "";
+	$scope.player.uid;
+	$scope.player.canSend = false;
+	
+	this.isEmpty = function(json){
+		for(item in json){
+			return false;
+		}
+		return true;
+	};
 
-		sessionCtrl.isEmpty = function(json){
-			for(item in json){
-				return false;
-			}
-			return true;
-		};
-
-		sessionCtrl.start = function(){
-			apiFactory.initUser().success(function(reply){
-				$scope.uid = reply.uid;
-				sessionCtrl.setHostOrClient();
-			});	
-		};
-		
-		sessionCtrl.setHostOrClient = function(){
-			apiFactory.hostOrClient(session).success(function(reply){
+	this.onPlayerJoin = function(callback){
+			ctrl.playerJoin = $interval(function(){
+				apiFactory.hasPlayerJoined(session).success(function(reply){
 				
-				if(reply.user_status == "host"){
-					console.log("You are the host!");
+				callback(reply);
 
-					$scope.isHost = true;
-					sessionCtrl.playerCheck = $interval(function(){ sessionCtrl.checkForPlayerJoin(); }, 1000, 0);	
-					sessionCtrl.messageCheck = $interval(function(){ sessionCtrl.getLatestMessages(); }, 300, 0);
-				} else {
-					
-					console.log("You are a player");
+				if(reply.status == 1){$interval.cancel(ctrl.playerJoin);}
+			});
+		}, 600, 0);
+	};
 
-					$scope.isHost = false;
-					$scope.startedMessage = "You have joined!";
-					
-					sessionCtrl.messageCheck2 = $interval(function(){ sessionCtrl.getLatestMessages(); }, 300, 0);
-				}
-			});	
-		};
-
-		sessionCtrl.checkForPlayerJoin = function(){
-			apiFactory.hasPlayerJoined(session).success(function(reply){
-				if(reply.status == 1){
-					$interval.cancel(sessionCtrl.playerCheck);
-					$scope.startedMessage = "Played has joined!";
-					$scope.canSend = true;
-				} else {
-					$scope.startedMessage = "Waiting for player...";
-				}
-			}); 
-		};
-
-		sessionCtrl.getMessageCount = function(){
-			var messageCount = $scope.messages.length - 1;
-			return messageCount;
-		};
-
-		sessionCtrl.getLatestMessages = function(){
-			if(sessionCtrl.isEmpty($scope.messages)){
-				
+	this.getMessages = function(callback){
+		$interval(function(){
+			if(ctrl.isEmpty($scope.messages)){
 				apiFactory.getAllMessages(session).success(function(reply){
-					if(!sessionCtrl.isEmpty(reply)){
-						for(var i = 0; i < reply.length; i++){
-							
-							if(reply[i].senderuid == $scope.uid){
-								reply[i].user = "You";
-								$scope.canSend = false;
-							} else{
-								reply[i].user = "Other";
-								$scope.canSend = true;
-							}
-
-							$scope.messages.push(reply[i]);
-						}
+					if(!ctrl.isEmpty(reply)){
+						callback(reply);		
 					}
 				});
-
 			} else {
 				var messageIndex = $scope.messages.length -1;
 				var lastMessage = $scope.messages[messageIndex].id;
 
-				apiFactory.getMessagesFrom(session, lastMessage).success(function(reply){	
-					if(!sessionCtrl.isEmpty(reply)){
-						
-						if(reply[0].id > lastMessage){
-							
-							if(reply[0].senderuid == $scope.uid){
-								reply[0].user = "You";
-								$scope.canSend = false;
-							} else{
-								reply[0].user = "Other";
-								$scope.canSend = true;
-							}
+				apiFactory.getMessagesFrom(session, lastMessage).success(function(reply){
+					callback(reply);
+				}); 
+			}
+		}, 300, 0);
+	};
+	
+	this.start = function(){
+		apiFactory.initUser().success(function(reply){
+			$scope.uid = reply.uid;
+			ctrl.joinSession(session);
+		});	
+	};
 
-							$scope.messages.push(reply[0]);
-						}
+	this.joinSession = function(session){
+		apiFactory.joinSession(session).success(function(reply){
+			if(reply.user_status == "host"){
+				$scope.player.rank = reply.user_status;
+				$scope.startedMessage = "You are host!";
+
+				ctrl.onPlayerJoin(function(reply){
+					if(reply.status == 0){
+						$scope.startedMessage = "Waiting for player...";
+					} else{
+						$scope.startedMessage = "Player has joined!";
+						$scope.player.canSend = true;
 					}
 				});
+
+			} else if(reply.user_status == "player"){
+				$scope.player.rank = reply.user_status;
+				$scope.startedMessage = "You have joined!";
+			} else if(reply.user_status == "spectator"){
+				$scope.player.rank = reply.user_status;
+				$scope.startedMessage = "You are a spectator!";
 			}
-		};
-
-		$scope.sendMessage = function(message){
-			if(message == ""){
-				alert("Message needs atleast 3 characters!");
-				return;
-			}
-
-			apiFactory.sendMessage(session, message).success(function(reply){
-			});
-		};
-
-		sessionCtrl.start(); 
-
-		$scope.$on('$destroy', function(){
-			if(sessionCtrl.messageCheck){
-				$interval.cancel(sessionCtrl.messageCheck);
-			} else if(sessionCtrl.messageCheck2){
-				$interval.cancel(sessionCtrl.messageCheck2);
-			} else if(sessionCtrl.playerCheck){
-				$interval.cancel(sessionCtrl.playerCheck);
-			}
-			
-			$scope.canSend = false;
 		});
+
+		ctrl.getMessages(function(reply){
+			for(var i = 0; i < reply.length; i++){				
+				if(reply[i].senderuid == $scope.uid){
+					reply[i].user = "You";
+					$scope.player.canSend = false;
+				} else {
+					reply[i].user = "Host";
+					$scope.player.canSend = true;
+				}
+
+				$scope.messages.push(reply[i]);
+			}
+		});
+	};
+
+	$scope.sendMessage = function(message){
+		if(message.length < 1){
+			alert("Message needs atleast 1 characters!");
+			return;
+		}
+		apiFactory.sendMessage(session, message);
+	};
+
+	this.start();
+
+
 });
