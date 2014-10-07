@@ -2,11 +2,12 @@
 	require_once("class_database.php");
 	class NewMessage{
 		public function __construct($uid, $content, $date, $session){
+			$content = html_entity_decode($content);
+			$content = explode(" ", $content);
+
 			$this->uid = $uid;
-			$this->content = $content;
+			$this->content = $content[0];
 			$this->session = $session;
-
-
 		}
 
 		public function insertMessage(){
@@ -17,6 +18,7 @@
 			}
 		}
 	}
+
 	class Message{
 		public function __construct($session){
 			$this->session = $session;
