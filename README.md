@@ -8,7 +8,4 @@ I have been writing this project on and off for 2 weeks so far. Due to some comp
 
 2. Add a time out for empty sessions.
 
-3. Stop all session page timers on page leave
-
-
 Please also note that the design is subject to change.
