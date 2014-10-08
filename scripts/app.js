@@ -136,9 +136,7 @@ app.controller("startSess", function($scope, $http, $state, apiFactory){
 	self.state = $state;
 
 	$scope.startNewSession = function(){
-		console.log("test");
 		apiFactory.startNewSession().success(function(reply){
-			console.log(reply);
 			if(reply.status == "complete"){
 				$state.goto('session', {session:reply.sessionid});
 			}
@@ -176,7 +174,7 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 	};
 
 	this.getMessages = function(callback){
-		$interval(function(){
+		ctrl.messageCheck = $interval(function(){
 			if(ctrl.isEmpty($scope.messages)){
 				apiFactory.getAllMessages(session).success(function(reply){
 					if(!ctrl.isEmpty(reply)){
@@ -247,8 +245,17 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 		}
 		apiFactory.sendMessage(session, message);
 	};
-
+	
 	this.start();
 
+	$scope.$on('$destroy', function(){ // Be sure to make an array of all the timers to save repeating the code.
+			if(ctrl.playerJoin){
+				$interval.cancel(ctrl.playerJoin);
+			} else if(ctrl.messageCheck){
+				$interval.cancel(ctrl.messageCheck);
+				}
+			
+			$scope.canSend = false;
+		});
 
 });
