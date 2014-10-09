@@ -228,8 +228,8 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 				if(reply[i].senderuid == $scope.uid){
 					reply[i].user = "You";
 					$scope.player.canSend = false;
-				} else {
-					reply[i].user = "Host";
+				} else if(reply[i].senderuid != $scope.uid){
+					reply[i].user = "Other";
 					$scope.player.canSend = true;
 				}
 
