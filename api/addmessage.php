@@ -14,4 +14,9 @@ $session = $_POST['session'];
 $uid = $_SESSION['uid'];
 
 $submitMessage = new NewMessage($uid, $_POST['message'], "", $session);
+
+if(!$submitMessage->canMessage()){
+	return;
+}
+
 $submitMessage->insertMessage();
