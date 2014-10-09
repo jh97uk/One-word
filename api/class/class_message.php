@@ -10,6 +10,18 @@
 			$this->session = $session;
 		}
 
+		public function canMessage(){
+			$userSessionQuery = new Database();
+
+			$result = $userSessionQuery->preparedQuery("SELECT * FROM `sessions` WHERE sessionid = ? AND hostuid = ? OR playeruid = ?", array($this->session, $this->uid, $this->uid))->fetchAll(PDO::FETCH_ASSOC); // This is probably a bad way of doing it. Revise.
+			if(count($result) == 1){
+				return true;
+			} else{
+				return false;
+			}
+
+		}
+
 		public function insertMessage(){
 			$insertMessageQuery = new Database();
 			$result = $insertMessageQuery->preparedQuery("INSERT INTO `messages` (`id`, `senderuid`, `content`, `sessionid`) VALUES (NULL, ?, ?, ?)", array($this->uid, $this->content, $this->session));
