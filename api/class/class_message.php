@@ -13,7 +13,8 @@
 		public function canMessage(){
 			$userSessionQuery = new Database();
 
-			$result = $userSessionQuery->preparedQuery("SELECT * FROM `sessions` WHERE sessionid = ? AND hostuid = ? OR playeruid = ?", array($this->session, $this->uid, $this->uid))->fetchAll(PDO::FETCH_ASSOC); // This is probably a bad way of doing it. Revise.
+			$result = $userSessionQuery->preparedQuery("SELECT * FROM `sessions` WHERE sessionid = ? AND (hostuid = ? OR playeruid = ?)", array($this->session, $this->uid, $this->uid))->fetchAll(PDO::FETCH_ASSOC); // This is probably a bad way of doing it. Revise.
+			
 			if(count($result) == 1){
 				return true;
 			} else{
