@@ -1,6 +1,8 @@
 One word
 ========
-I have been writing this project on and off for 2 weeks so far. Due to some complications I havent been able to spend much time on it. So far, its mostly functional and usable as a chat room chat service. 
+
+On this project you start a session, give a link of the session to a friend, at which point you say one word and your friend has to say another word relating to the word you just said to form a sentance.
+ 
 
 **TO DO**
 
