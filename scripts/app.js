@@ -220,6 +220,8 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 			} else if(reply.user_status == "spectator"){
 				$scope.player.rank = reply.user_status;
 				$scope.startedMessage = "You are a spectator!";
+			} else if(reply.error == "needs_session"){
+				$scope.startedMessage = "You need a valid session!";
 			}
 		});
 
