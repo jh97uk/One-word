@@ -34,4 +34,29 @@
 				echo json_encode(["error"=>"invalid"]);
 			}
 		}
+		
+		function joinSession($uid, $session){
+			$fetchAllDB = new Database();
+			$result = $fetchAllDB->preparedQuery("SELECT * FROM sessions WHERE sessionid = ?", array($session))->fetchAll(PDO::FETCH_ASSOC);
+			
+			$status = "";
+			
+			if($result){
+				foreach ($result as $key) {
+					if($key['hostuid'] == "" or $key['hostuid'] == $uid){
+						$setHostQuery = $fetchAllDB->preparedQuery("UPDATE sessions SET hostuid = ? WHERE sessionid = ?", array($uid, $session));
+						$status = "host";
+					} elseif($key['playeruid'] == "" or $key['playeruid'] == $uid){
+						$setClientQuery = $fetchAllDB->preparedQuery("UPDATE sessions SET playeruid = ?, started = 1 WHERE sessionid = ?", array($uid, $session));
+						$status = "player";
+					} else{
+						$status = "spectator";
+					}
+				}
+			} else {
+				return false;	
+			}
+
+			return $status;
+		}
 	}
