@@ -210,7 +210,9 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 						$scope.startedMessage = "Waiting for player...";
 					} else{
 						$scope.startedMessage = "Player has joined!";
-						$scope.player.canSend = true;
+						if(ctrl.isEmpty($scope.messages)){
+							$scope.player.canSend = true;
+						}
 					}
 				});
 
