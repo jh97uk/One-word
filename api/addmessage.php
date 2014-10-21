@@ -13,6 +13,13 @@ if(!isset($_SESSION['uid'])){
 $session = $_POST['session'];
 $uid = $_SESSION['uid'];
 
+if(isset($_SESSION["lasttime"]) and $_SESSION['lasttime'] + 0.2 > time()){
+	return;
+}
+
+$_SESSION["lasttime"] = time();
+
+
 $submitMessage = new NewMessage($uid, $_POST['message'], $session);
 
 if(!$submitMessage->canMessage()){
