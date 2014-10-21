@@ -3,10 +3,15 @@
 	class Session{
 	
 		function createSession(){
+			date_default_timezone_set('GMT'); 
+
 			$session_id = md5(uniqid());
 
 			$newSessionQuery = new Database();
-			$newSessionQuery->preparedQuery("INSERT INTO `sessions` (`id`, `sessionid`, `password`, `date`, `host`, `hostuid`, `finished`) VALUES (NULL ,  ?,  '',  '2014-09-04 00:00:00',  ?,  ?, '0');", array($session_id, "", ""));
+			
+			$date = date("Y-m-d h:m:s");
+
+			$newSessionQuery->preparedQuery("INSERT INTO `sessions` (`id`, `sessionid`, `date`, `host`, `hostuid`, `finished`) VALUES (NULL, ?, ?, ?, ?, '0');", array($session_id, $date, "", ""));
 
 			return $session_id;
 		}
@@ -63,7 +68,6 @@
 		function getPlayers($session){
 			$fetch = new Database(); // Bad name. Like all the databases in this file...
 			$playersQuery = $fetch->preparedQuery("SELECT hostuid, playeruid FROM sessions WHERE sessionid = ?", array($session))->fetchAll(PDO::FETCH_ASSOC);
-
 			$players = [];
 
 			foreach ($playersQuery as $key) {
