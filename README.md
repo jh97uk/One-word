@@ -6,8 +6,6 @@ On this project you start a session, give a link of the session to a friend, at 
 
 **TO DO**
 
-1. Implement a messages per interval limit
-
-2. Add a time out for empty sessions.
+1. Add a time out for empty sessions.
 
 Please also note that the design is subject to change.
