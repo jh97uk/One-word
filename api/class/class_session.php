@@ -8,7 +8,7 @@
 			$session_id = md5(uniqid());
 
 			$newSessionQuery = new Database();
-			
+
 			$date = date("Y-m-d h:m:s");
 
 			$newSessionQuery->preparedQuery("INSERT INTO `sessions` (`id`, `sessionid`, `date`, `host`, `hostuid`, `finished`) VALUES (NULL, ?, ?, ?, ?, '0');", array($session_id, $date, "", ""));
@@ -20,6 +20,25 @@
 			$fetchAllDB = new Database();
 			$result = $fetchAllDB->preparedQuery("SELECT * FROM sessions WHERE sessionid = ?", array($session))->fetchAll(PDO::FETCH_ASSOC);
 			return $result;
+		}
+
+		function getSessionStatus($session){
+			$fetchAllDB = new Database();
+			$result = $fetchAllDB->preparedQuery("SELECT * FROM sessions WHERE sessionid=?", array($session))->fetchAll(PDO::FETCH_ASSOC);
+
+			if($result){
+				foreach ($result as $key) {
+					if($key['playeruid'] != ""){
+						$status = ["status"=>"1"];
+					} else{
+						$status = ["status"=>"0"];
+					}
+				}
+			} else {
+				$status = ["error"=>"unknown"];
+			}
+
+			return $status;
 		}
 
 		function setHostOrClient($session){
