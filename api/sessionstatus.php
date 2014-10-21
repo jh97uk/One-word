@@ -13,5 +13,6 @@ if(!isset($_SESSION['uid'])){
 $sessionid = $_POST['session'];
 
 $session = new Session();
+$result = $session->getSessionStatus($sessionid);
 
-echo json_encode($session->getSessionStatus($sessionid));
+echo json_encode($result);
