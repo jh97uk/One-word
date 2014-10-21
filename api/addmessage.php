@@ -12,9 +12,8 @@ if(!isset($_SESSION['uid'])){
 
 $session = $_POST['session'];
 $uid = $_SESSION['uid'];
-$date = date("Y-m-d");
 
-$submitMessage = new NewMessage($uid, $_POST['message'], $date, $session); // Move the date to the session table and _not_ the message table...
+$submitMessage = new NewMessage($uid, $_POST['message'], $session);
 
 if(!$submitMessage->canMessage()){
 	return;
