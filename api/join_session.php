@@ -17,11 +17,8 @@ $sessionJoin = new Session();
 
 $status = $sessionJoin->joinSession($client, $session);
 
-if(!$status){
-	echo json_encode(["error"=>"needs_session"]);
-	return;
-}
+$currentPlayers = $sessionJoin->getPlayers($session);
 
-echo json_encode(["user_status"=>$status]);
+echo json_encode(["user_status"=>$status, "host"=>$currentPlayers["host"], "player"=>$currentPlayers["player"]]);
 
 
