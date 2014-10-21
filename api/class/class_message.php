@@ -1,7 +1,7 @@
 <?php
 	require_once("class_database.php");
 	class NewMessage{
-		public function __construct($uid, $content, $date, $session){
+		public function __construct($uid, $content, $session){
 			$content = html_entity_decode($content);
 			$content = explode(" ", $content);
 
