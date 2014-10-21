@@ -59,4 +59,18 @@
 
 			return $status;
 		}
+
+		function getPlayers($session){
+			$fetch = new Database(); // Bad name. Like all the databases in this file...
+			$playersQuery = $fetch->preparedQuery("SELECT hostuid, playeruid FROM sessions WHERE sessionid = ?", array($session))->fetchAll(PDO::FETCH_ASSOC);
+
+			$players = [];
+
+			foreach ($playersQuery as $key) {
+				$players["host"] = $playersQuery[0]['hostuid'];
+				$players["player"] = $playersQuery[0]['playeruid'];
+			}
+
+			return $players;
+		}
 	}
