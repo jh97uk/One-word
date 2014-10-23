@@ -21,6 +21,10 @@ body {
 		height:100%;
 		margin-top:0px;
 	}
+
+	#send input{
+		font-size:40px;
+	}
 }
 
 #innercontainer{
@@ -208,9 +212,17 @@ form button{
 		color:green;
 		font-weight: bold;
 	}
-	
+	.description button{
+		width:84px;
+		background-size: 70px;
+	}
+
 	#send button{
 		font-size:45px;
+	}
+
+	#send input{
+		font-size:40px;
 	}
 
 	#chat ul{
