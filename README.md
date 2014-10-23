@@ -8,4 +8,3 @@ On this project you start a session, give a link of the session to a friend, at 
 
 1. Add a time out for empty sessions.
 
-Please also note that the design is subject to change.
