@@ -1,5 +1,5 @@
 <div class="messagerContainer" ng-controller="sessionCtrl as controller">
-		<div class="description"><p>{{startedMessage}}</p></div>
+		<div class="description"><p>{{startedMessage}}</p><button ng-click="shortenLink()" style="background-image:url('media/link.png')"></button></div>
 		<div id="chat" scroll-glue>
 			<ul>
 				<li ng-repeat="message in messages" message-id="{{message.id}}">{{message.user}}: {{message.content}}</li>
