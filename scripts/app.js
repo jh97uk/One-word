@@ -107,6 +107,15 @@ app.factory('apiFactory', ['$http', function($http){
 		});
 	};
 
+	apiFactory.getShortURL = function(){
+		return $http({
+			method: "POST",
+			url:"https://www.googleapis.com/urlshortener/v1/url",
+			data:{"longUrl":document.URL},
+			headers:{"Content-Type":"application/json"}
+		});
+	}
+
 	return apiFactory;
 }]);
 
@@ -250,9 +259,15 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 		apiFactory.sendMessage(session, message);
 	};
 	
+	$scope.shortenLink = function(){
+		apiFactory.getShortURL().success(function(reply){
+			window.prompt("Heres a shortened link:", reply.id);
+		});
+	}
+
 	this.start();
 
-	$scope.$on('$destroy', function(){ // Be sure to make an array of all the timers to save repeating the code.
+	$scope.$on('$destroy', function(){
 			if(ctrl.playerJoin){
 				$interval.cancel(ctrl.playerJoin);
 			} else if(ctrl.messageCheck){
