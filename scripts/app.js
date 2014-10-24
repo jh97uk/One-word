@@ -174,10 +174,10 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 	this.onPlayerJoin = function(callback){
 			ctrl.playerJoin = $interval(function(){
 				apiFactory.hasPlayerJoined(session).success(function(reply){
-				
-				callback(reply);
-
-				if(reply.status == 1){$interval.cancel(ctrl.playerJoin);}
+				if(reply.status == 1){
+					callback(reply);
+					$interval.cancel(ctrl.playerJoin);
+				}
 			});
 		}, 600, 0);
 	};
@@ -212,16 +212,12 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 		apiFactory.joinSession(session).success(function(reply){
 			if(reply.user_status == "host"){
 				$scope.player.rank = reply.user_status;
-				$scope.startedMessage = "You are host!";
+				$scope.startedMessage = "Waiting for player...";
 
 				ctrl.onPlayerJoin(function(reply){
-					if(reply.status == 0){
-						$scope.startedMessage = "Waiting for player...";
-					} else{
-						$scope.startedMessage = "Player has joined!";
-						if(ctrl.isEmpty($scope.messages)){
-							$scope.player.canSend = true;
-						}
+					$scope.startedMessage = "Player has joined!";
+					if(ctrl.isEmpty($scope.messages)){
+						$scope.player.canSend = true;
 					}
 				});
 
