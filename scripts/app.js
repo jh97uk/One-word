@@ -86,9 +86,7 @@ app.factory('apiFactory', ['$http', function($http){
 	};
 
 	apiFactory.getAllMessages = function(session) {
-		if(session == null){
-			return;
-		}
+		if(session == null) return;
 
 		return $http({
 			method:"POST",
@@ -146,9 +144,7 @@ app.controller("startSess", function($scope, $http, $state, apiFactory){
 
 	$scope.startNewSession = function(){
 		apiFactory.startNewSession().success(function(reply){
-			if(reply.status == "complete"){
-				$state.goto('session', {session:reply.sessionid});
-			}
+			if(reply.status == "complete") $state.goto('session', {session:reply.sessionid});
 		});
 	};
 });
@@ -174,6 +170,7 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 	this.onPlayerJoin = function(callback){
 			ctrl.playerJoin = $interval(function(){
 				apiFactory.hasPlayerJoined(session).success(function(reply){
+
 				if(reply.status == 1){
 					callback(reply);
 					$interval.cancel(ctrl.playerJoin);
@@ -216,9 +213,8 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 
 				ctrl.onPlayerJoin(function(reply){
 					$scope.startedMessage = "Player has joined!";
-					if(ctrl.isEmpty($scope.messages)){
-						$scope.player.canSend = true;
-					}
+					if(ctrl.isEmpty($scope.messages)) $scope.player.canSend = true;
+			
 				});
 
 			} else if(reply.user_status == "player"){
@@ -257,6 +253,7 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 	
 	$scope.shortenLink = function(){
 		apiFactory.getShortURL().success(function(reply){
+			console.log(reply);
 			window.prompt("Heres a shortened link:", reply.id);
 		});
 	}
