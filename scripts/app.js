@@ -248,6 +248,9 @@ app.controller("sessionCtrl", function($http, $scope, $routeParams, $state, $int
 			alert("Message needs atleast 1 characters!");
 			return;
 		}
+
+		$scope.messageContent = "";
+
 		apiFactory.sendMessage(session, message);
 	};
 	
